@@ -1,5 +1,4 @@
 ﻿using FluentFTP;
-using Serilog;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Reflection;
@@ -57,7 +56,7 @@ namespace ndFTP
                 string configPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"config.json");
                 if(String.IsNullOrEmpty(configPath))
                 {
-                    Log.Fatal("Keine config-Datei gefunden.");
+                  //  Log.Fatal("Keine config-Datei gefunden.");
                 }
                 val = JsonSerializer.Deserialize<ftpValues>(File.ReadAllText(configPath));
                 val.password = Program.passwordManager();
@@ -68,7 +67,7 @@ namespace ndFTP
             }
             catch (Exception exc)
             {
-                Log.Error(exc.Message);
+               // Log.Error(exc.Message);
             }
         }
         public static bool checkConnection() 
@@ -80,7 +79,7 @@ namespace ndFTP
             {
                 //client.Config.ConnectTimeout = TimeSpan.FromSeconds(10).Seconds;
                 //client.Config.LogToConsole = true;
-                Log.Information("Checking ftp-Connection...");
+              //  Log.Information("Checking ftp-Connection...");
                 var hold = client.AutoDetect();
                 client.Config.ValidateAnyCertificate = true;
                 
@@ -89,7 +88,7 @@ namespace ndFTP
             }
             catch(Exception exc)
             {
-                Log.Error(exc.Message);
+             //   Log.Error(exc.Message);
                 return false;
             }
             return true; 
