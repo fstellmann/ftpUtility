@@ -1,5 +1,4 @@
-﻿using Serilog;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace ndFTP
@@ -76,7 +75,7 @@ namespace ndFTP
             }
             catch (Exception exc)
             {
-                Log.Error(exc.Message);
+             //   Log.Error(exc.Message);
             }
             finally
             {
@@ -125,11 +124,11 @@ namespace ndFTP
             }
             catch (CryptographicException exc_CryptographicException)
             {
-                Log.Error(exc_CryptographicException.Message);
+              //  Log.Error(exc_CryptographicException.Message);
             }
             catch (Exception exc)
             {
-                Log.Error(exc.Message);
+              //  Log.Error(exc.Message);
             }
 
             try
@@ -138,7 +137,7 @@ namespace ndFTP
             }
             catch (Exception exc)
             {
-                Log.Error(exc.Message);
+              //  Log.Error(exc.Message);
             }
             finally
             {

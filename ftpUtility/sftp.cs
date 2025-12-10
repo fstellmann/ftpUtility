@@ -1,8 +1,6 @@
 ﻿using FluentFTP;
 using FluentFTP.Logging;
 using Renci.SshNet;
-using Serilog;
-using Serilog.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,7 +14,7 @@ namespace ndFTP
     {
         public static bool checkConnection()
         {
-            Log.Information("Checking sftp-Connection...");
+          //  Log.Information("Checking sftp-Connection...");
             var client = new SftpClient(ftp.val.host, ftp.val.user, ftp.val.password);
             client.Connect();
             //Log.Information("MaxSessions: "+client.ConnectionInfo.MaxSessions.ToString());
