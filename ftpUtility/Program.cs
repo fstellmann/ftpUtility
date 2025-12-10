@@ -1,6 +1,7 @@
 ﻿using ftpCoreLib;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace ftpUtility
@@ -8,17 +9,30 @@ namespace ftpUtility
     public static class Program
     {
         internal static readonly string generalPass = "myStrongKey123!";
+        private const string EventSource = "FtpUtility";
+        private const string EventLogName = "Application";
+
         public static int Main(string[] args)
         {
+            EnsureEventSource();
+
             using var loggerFactory = LoggerFactory.Create(builder =>
             {
+                builder.SetMinimumLevel(LogLevel.Information);
+
+                builder.AddSimpleConsole(o =>
+                {
+                    o.SingleLine = true;
+                    o.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+                });
+
                 builder.AddEventLog(new EventLogSettings
                 {
-                    SourceName = "FtpUtility",
-                    LogName = "Application"
+                    SourceName = EventSource,
+                    LogName = EventLogName
                 });
-                builder.SetMinimumLevel(LogLevel.Information);
             });
+
             var logger = loggerFactory.CreateLogger("FtpUtility.Cli");
 
             try
@@ -45,6 +59,8 @@ namespace ftpUtility
                     Port = model.Port,
                     Username = model.Username,
                     Password = password,
+                    UseKeyFile = model.UseKeyFile,
+                    KeyFilePath = model.KeyFilePath,
                     LocalFolder = model.LocalFolder,
                     RemoteFolder = model.RemoteFolder,
                     DeleteSource = model.DeleteSource,
@@ -82,6 +98,15 @@ namespace ftpUtility
             string password = File.ReadAllText(tempPath).Trim();
             File.Delete(tempPath);
             return password;
+        }
+        private static void EnsureEventSource()
+        {
+            if (!OperatingSystem.IsWindows()) return;
+
+            if (!EventLog.SourceExists(EventSource))
+            {
+                EventLog.CreateEventSource(EventSource, EventLogName);
+            }
         }
     }
 }

@@ -42,7 +42,9 @@ namespace ftpCoreLib
             }
 
             using var initialClient = CreateClient();
-            var listing = initialClient.GetListing(options.RemoteFolder).Where(x => x.Type == FtpObjectType.File).ToArray();
+            var listOptions = options.Recursive ? FtpListOption.Recursive : FtpListOption.Auto;
+            var listing = initialClient.GetListing(options.RemoteFolder, listOptions).Where(x => x.Type == FtpObjectType.File).ToArray();
+            // var listing = initialClient.GetListing(options.RemoteFolder).Where(x => x.Type == FtpObjectType.File).ToArray();
             if (listing.Length == 0) return 0;
 
             var clients = new ConcurrentBag<FtpClient>();
@@ -61,9 +63,12 @@ namespace ftpCoreLib
 
                 try
                 {
-                    var localPath = Path.Combine(options.LocalFolder, file.Name);
-                    var existsMode = options.OverwriteTarget ? FtpLocalExists.Overwrite : FtpLocalExists.Skip;
+                    var relative = FtpHelper.GetRelativeRemotePath(options.RemoteFolder, file.FullName);
+                    var localPath = Path.Combine(options.LocalFolder, relative.Replace('/', Path.DirectorySeparatorChar));
+                    var dir = Path.GetDirectoryName(localPath);
+                    if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
 
+                    var existsMode = options.OverwriteTarget ? FtpLocalExists.Overwrite : FtpLocalExists.Skip;
                     var status = client.DownloadFile(localPath, file.FullName, existsMode, FtpVerify.None);
                     if (status == FtpStatus.Success) Interlocked.Increment(ref fileCount);
                 }
@@ -102,7 +107,9 @@ namespace ftpCoreLib
             int fileCount = 0;
             var exceptions = new ConcurrentQueue<Exception>();
 
-            var files = Directory.GetFiles(options.LocalFolder);
+            //var files = Directory.GetFiles(options.LocalFolder);
+            var files = Directory.GetFiles(options.LocalFolder, "*", options.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
             if (files.Length == 0) return 0;
 
             FtpClient CreateClient()
@@ -141,10 +148,15 @@ namespace ftpCoreLib
 
                 try
                 {
-                    var fileName = Path.GetFileName(filePath);
-                    var remotePath = FtpHelper.CombineRemotePath(options.RemoteFolder, fileName);
-                    var existsMode = options.OverwriteTarget ? FtpRemoteExists.Overwrite : FtpRemoteExists.Skip;
+                    var relative = Path.GetRelativePath(options.LocalFolder, filePath).Replace(Path.DirectorySeparatorChar, '/');
+                    var remotePath = FtpHelper.CombineRemotePath(options.RemoteFolder, relative);
 
+                    var remoteDir = remotePath.Contains('/') ? remotePath[..remotePath.LastIndexOf('/')] : options.RemoteFolder;
+
+                    if (!string.IsNullOrEmpty(remoteDir))
+                        client.CreateDirectory(remoteDir, true);
+
+                    var existsMode = options.OverwriteTarget ? FtpRemoteExists.Overwrite : FtpRemoteExists.Skip;
                     var status = client.UploadFile(filePath, remotePath, existsMode, false, FtpVerify.None);
                     if (status == FtpStatus.Success) Interlocked.Increment(ref fileCount);
                 }

@@ -2,18 +2,21 @@
   "Protocol": "Sftp",
   "Mode": "Download",
 
-  "Host": "example.com",
-  "Port": 22,
+  "Host": "ssh.nrteam.it",
+  "Port": 18765,
 
-  "Username": "ftpuser",
-  "PlainPassword": null,
+  "Username": "u2-vwtj98nnmtgw",
+  "PlainPassword": "ohGei!2m",
+  "UseKeyFile": true,
+  "KeyFilePath": "C:\\Users\\FlorianStellmann\\siteground",
 
   "PasswordEncrypted": false,
   "PasswordFile": "pass.aes",
 
-  "RemoteFolder": "/inbound",
+  "RemoteFolder": "/home/u2-vwtj98nnmtgw/www/nrteam.it/public_html/images/brands",
   "LocalFolder": "C:\\FtpData\\Inbound",
 
   "DeleteSource": false,
-  "OverwriteTarget": true
+  "OverwriteTarget": false
 }
+

@@ -12,10 +12,14 @@
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
 
+        public bool UseKeyFile { get; set; } = false;
+        public string KeyFilePath { get; set; } = string.Empty;
+
         public string RemoteFolder { get; set; } = "/";
         public string LocalFolder { get; set; } = ".";
         public bool DeleteSource { get; set; } = false;
         public bool OverwriteTarget { get; set; } = true;
+        public bool Recursive { get; set; } = false;
 
         public void Validate()
         {
