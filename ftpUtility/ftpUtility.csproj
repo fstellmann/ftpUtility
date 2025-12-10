@@ -5,6 +5,28 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <StartupObject>ftpUtility.Program</StartupObject>
+    <ApplicationIcon>ChatGPT Image 10.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ftpconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ChatGPT Image 10.ico" />
+    <Content Include="ftpconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ftpCoreLib\ftpCoreLib.csproj" />
+  </ItemGroup>
 
 </Project>

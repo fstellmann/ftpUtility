@@ -1,0 +1,19 @@
+{
+  "Protocol": "Sftp",
+  "Mode": "Download",
+
+  "Host": "example.com",
+  "Port": 22,
+
+  "Username": "ftpuser",
+  "PlainPassword": null,
+
+  "PasswordEncrypted": false,
+  "PasswordFile": "pass.aes",
+
+  "RemoteFolder": "/inbound",
+  "LocalFolder": "C:\\FtpData\\Inbound",
+
+  "DeleteSource": false,
+  "OverwriteTarget": true
+}

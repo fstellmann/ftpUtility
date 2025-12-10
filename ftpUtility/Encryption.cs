@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace ndFTP
+namespace ftpUtility
 {
     public static class Encryption
     {
